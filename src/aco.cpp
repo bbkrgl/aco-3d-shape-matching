@@ -1,13 +1,21 @@
 #include "aco.h"
 
-using namespace pagmo;
-
-vector_double aco3d_problem::fitness(const vector_double &dv) const
+graph::graph(shape &I, shape &J)
 {
-	// TODO
+
 }
 
-std::pair<vector_double, vector_double> aco3d_problem::get_bounds() const
+matching graph::construct_matching()
 {
-	// TODO
+
+}
+
+void graph::update_pheromones()
+{
+
+}
+
+void shape_match(shape &I, shape &J, best_mc &m)
+{
+
 }

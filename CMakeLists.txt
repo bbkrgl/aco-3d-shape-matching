@@ -9,9 +9,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 option(LIBIGL_GLFW "Build target igl::glfw" ON)
 include(libigl)
 
-find_package(Pagmo REQUIRED)
+include(dlib)
 
 # Add your project files
 file(GLOB SRC_FILES src/*.cpp)
 add_executable(${PROJECT_NAME} ${SRC_FILES})
-target_link_libraries(${PROJECT_NAME} PUBLIC igl::glfw Pagmo::pagmo)
+target_link_libraries(${PROJECT_NAME} PUBLIC igl::glfw dlib::dlib)
