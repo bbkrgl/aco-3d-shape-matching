@@ -14,5 +14,5 @@ shape::shape(char* mesh_path)
 		dijkstra(i, adj_list, V, Q, prev);
 
 		dist_matrix.row(i) = Q;
-	}	
+	}
 }

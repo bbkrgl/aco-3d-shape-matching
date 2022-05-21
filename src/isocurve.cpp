@@ -1,4 +1,5 @@
 #include "isocurve.h"
+#define f(l) pow(l, 4)
 
 int is_in_radius(double r, Eigen::MatrixXd &V, Eigen::VectorXi &face, Eigen::VectorXd &Q)
 { return (Q(face(0)) < r) + (Q(face(1)) < r) * 2 + (Q(face(2)) < r) * 4; }
@@ -55,9 +56,6 @@ double isocurve_len_r(double r, Eigen::MatrixXd &V, Eigen::MatrixXi &F, Eigen::V
 	return l;
 }
 
-double f(double l)
-{ return pow(l, 4); }
-
 void isocurve(int p, int k, shape &S, Eigen::VectorXd &H)
 {
 	Eigen::VectorXd Q = S.dist_matrix.row(p);
@@ -72,7 +70,35 @@ void isocurve(int p, int k, shape &S, Eigen::VectorXd &H)
 	}
 }
 
-void distance_isocurve(int k, int i, int j, shape &I, shape &J)
+double partial_distance_isocurve(int k, int i, int j, shape &I, shape &J)
 {
-	
+	double dist = 0;
+
+	Eigen::VectorXd Q_I = I.dist_matrix.row(i);
+	double max_len_I = Q_I.maxCoeff();
+	double sc_I = f(max_len_I) / max_len_I;
+
+	Eigen::VectorXd Q_J = J.dist_matrix.row(i);
+	double max_len_J = J.dist_matrix.row(j).maxCoeff();
+
+	for (int i = 0; i < k; i++) {
+		double r_i = f((i + 1) * max_len_I / k) / sc_I; // TODO: Check r_i
+
+		if (r_i > std::min(max_len_I, max_len_J))
+			break;
+
+		double d_i = isocurve_len_r(r_i, I.V, I.F, Q_I);
+		double d_j = isocurve_len_r(r_i, J.V, J.F, Q_J);
+		dist += std::abs((d_i - d_j) / (d_i + d_j));
+	}
+
+	return dist;
+}
+
+double distance_isocurve(int k, int i, int j, shape &I, shape &J)
+{
+	double d_ij = partial_distance_isocurve(k, i, j, I, J);
+	double d_ji = partial_distance_isocurve(k, j, i, J, I);
+
+	return (d_ij + d_ji) / 2;
 }
