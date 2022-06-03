@@ -26,7 +26,7 @@ void dijkstra(int p, std::vector<std::vector<int>> &adj_list, Eigen::MatrixXd &V
 
 		mh.insertKey(i, DBL_MAX);
 	}
-	
+
 	while(!mh.isEmpty()) {
 		int u = mh.getMin();
 		mh.extractMin();
