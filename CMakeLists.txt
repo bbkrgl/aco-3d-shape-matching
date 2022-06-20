@@ -9,9 +9,18 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 option(LIBIGL_GLFW "Build target igl::glfw" ON)
 include(libigl)
 
-include(dlib)
+#include(FetchContent)
+#FetchContent_Declare(
+#  or-tools
+#  GIT_REPOSITORY https://github.com/google/or-tools.git
+#  GIT_TAG        master
+#)
+
+# After the following call, the CMake targets defined by or-tools
+# will be defined and available to the rest of the build
+#FetchContent_MakeAvailable(or-tools)
 
 # Add your project files
 file(GLOB SRC_FILES src/*.cpp)
 add_executable(${PROJECT_NAME} ${SRC_FILES})
-target_link_libraries(${PROJECT_NAME} PUBLIC igl::glfw dlib::dlib)
+target_link_libraries(${PROJECT_NAME} PUBLIC igl::glfw)

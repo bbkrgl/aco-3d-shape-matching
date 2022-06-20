@@ -95,7 +95,6 @@ double partial_distance_isocurve(int k, int i, int j, shape &I, shape &J)
 
 		double d_i = isocurve_len_r(r_i, I.V, I.F, Q_I);
 		double d_j = isocurve_len_r(r_i, J.V, J.F, Q_J);
-		std::cout << d_i << " " << d_j << std::endl;
 		dist += std::abs((d_i - d_j) / (d_i + d_j));
 	}
 
