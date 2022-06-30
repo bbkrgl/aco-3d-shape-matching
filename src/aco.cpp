@@ -26,9 +26,8 @@ void graph::update_pheromones(std::vector<std::pair<std::vector<int>*, double>> 
 
 	for (int i = 0; i < matchings.size(); i++) {
 		std::vector<int>* m = matchings[i].first;
-		for (int j = 0; j < ph_I_J.cols(); j++)
-			for (int i_ = 0; i_ < m->size(); i_++)
-				ph_I_J((*m)[i_], j) += delta / matchings[i].second;
+		for (int i_ = 0; i_ < m->size(); i_++)
+			ph_I_J(i, (*m)[i_]) += delta / matchings[i].second; // TODO: Check
 	}
 }
 
@@ -142,8 +141,8 @@ double proximity_term(graph &G, std::vector<int> &m)
 		for (int i_ = 0; i_ < G.I.V.rows(); i_++) {
 			if (i == i_)
 				continue;
-			std::cout << "Prox term (" << i << ", " << i_ << ") res: " << res << std::endl;
-			std::cout << "Dist matrix " << G.dist_matrix_I(i, i_) << std::endl;
+			//std::cout << "Prox term (" << i << ", " << i_ << ") res: " << res << std::endl;
+			//std::cout << "Dist matrix " << G.dist_matrix_I(i, i_) << std::endl;
 			res += std::exp(-std::pow(G.dist_matrix_I(i, i_), 2) / G.s_I)
 				* std::abs(G.dist_matrix_I(i, i_) - G.dist_matrix_J(m[i], m[i_]));
 		}
@@ -156,6 +155,9 @@ double qap(graph &G, std::vector<int> &m)
 {
 	double sim = similarity_term(G, m);
 	double prox = proximity_term(G, m);
+
+	std::cout << "Similarity: " << sim << std::endl;
+	std::cout << "Proximity: " << prox << std::endl;
 
 	return (1 - v) * sim + v * prox;
 }
