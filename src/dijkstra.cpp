@@ -17,19 +17,19 @@ void dijkstra(int p, std::vector<std::vector<int>> &adj_list, Eigen::MatrixXd &V
 	Q.fill(DBL_MAX);
 	Q(p) = 0;
 
-	MHeap mh(adj_list.size());
-	mh.insertKey(p, 0);
+	FibonacciHeap<int, double> fh;
+	fh.insert(p, 0);
 
 	for (int i = 0; i < adj_list.size(); i++) {
 		if (i == p)
 			continue;
 
-		mh.insertKey(i, DBL_MAX);
+		fh.insert(i, DBL_MAX);
 	}
 
-	while(!mh.isEmpty()) {
-		int u = mh.getMin();
-		mh.extractMin();
+	while(!fh.isEmpty()) {
+		int u = fh.getMinimum();
+		fh.removeMinimum();
 		for (int i = 0; i < adj_list[u].size(); i++) {
 			int s = u;
 			int d = adj_list[u][i];
@@ -40,7 +40,7 @@ void dijkstra(int p, std::vector<std::vector<int>> &adj_list, Eigen::MatrixXd &V
 			if (Q(d) > distance + Q(s)) {
 				Q(d) = distance + Q(s);
 				prev(d) = s;
-				mh.decreaseKey(d, distance + Q(s));
+				fh.decreaseKey(fh.find(d), distance + Q(s));
 			}
 		}
 	}

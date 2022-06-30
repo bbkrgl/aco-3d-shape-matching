@@ -4,8 +4,7 @@
 #include <igl/edges.h>
 #include <igl/adjacency_list.h>
 #include <cfloat>
-
-#include "heap.h"
+#include "fibonacci.h"
 
 void dijkstra(int p, std::vector<std::vector<int>> &adj_list, Eigen::MatrixXd &V, Eigen::VectorXd &Q, Eigen::VectorXi &prev);
 

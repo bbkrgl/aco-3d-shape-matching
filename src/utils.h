@@ -11,6 +11,7 @@ typedef struct shape {
 	Eigen::MatrixXi F;
 	std::vector<std::vector<int>> adj_list;
 	Eigen::MatrixXd dist_matrix;
+	std::vector<std::vector<double>> dist_hist;
 
 	shape() {};
 	shape(char* mesh_path);
