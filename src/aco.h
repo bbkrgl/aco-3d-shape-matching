@@ -9,7 +9,7 @@
 #include "isocurve.h"
 #include <fstream>
 
-#define NUM_ITERS 10
+#define NUM_ITERS 500
 #define NUM_ANTS 1
 #define k 8
 #define v 0.7

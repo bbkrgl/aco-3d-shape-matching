@@ -27,7 +27,7 @@ void graph::update_pheromones(std::vector<std::pair<std::vector<int>*, double>> 
 	for (int i = 0; i < matchings.size(); i++) {
 		std::vector<int>* m = matchings[i].first;
 		for (int i_ = 0; i_ < m->size(); i_++)
-			ph_I_J(i, (*m)[i_]) += delta / matchings[i].second; // TODO: Check
+			ph_I_J(i_, (*m)[i_]) += delta / matchings[i].second; // TODO: Check
 	}
 }
 
@@ -59,16 +59,17 @@ std::vector<int>* aco::construct_matching()
 	int i_ = 0;
 	int i__ = 0;
 	while (!v_available.empty()) {
-		std::cout << "Current vertex: " << i << std::endl;
-		std::cout << "Current progress: " << G.I.V.rows() - v_available.size() << "/" << G.I.V.rows() << std::endl;
+		//std::cout << "Current vertex: " << i << std::endl;
+		//std::cout << "Current progress: " << G.I.V.rows() - v_available.size() << "/" << G.I.V.rows() << std::endl;
 
+		double sum = 0;
 		for (int j = 0; j < G.J.V.rows(); j++) // TODO: Figure out order preservation
 			P[j] = edge_probability(*matching, i, j, i_, i__);
 
 		std::discrete_distribution<> dis(P.begin(), P.end());
 		(*matching)[i] = dis(gen);
 		i = get_rand_int(v_available);
-		i__ = i_; // TODO: i_, i__
+		i__ = i_;
 		i_ = i;
 	}
 
@@ -125,11 +126,8 @@ void hungarian_matching(int max_i, shape &I, shape &J, std::vector<int> &m)
 double similarity_term(graph &G, std::vector<int> &m)
 {
 	double res = 0;
-	for (int i = 0; i < G.I.V.rows(); i++) {
-		std::cout << "Sim term " << i << " res: " << res << std::endl;
-		std::cout << "Dist matrix " << G.dist_matrix(i, m[i]) << std::endl;
+	for (int i = 0; i < G.I.V.rows(); i++)
 		res += std::abs(1 - std::exp(-std::pow(G.dist_matrix(i, m[i]), 2) / G.s_R));
-	}
 
 	return res / G.I.V.rows();
 }
@@ -141,8 +139,6 @@ double proximity_term(graph &G, std::vector<int> &m)
 		for (int i_ = 0; i_ < G.I.V.rows(); i_++) {
 			if (i == i_)
 				continue;
-			//std::cout << "Prox term (" << i << ", " << i_ << ") res: " << res << std::endl;
-			//std::cout << "Dist matrix " << G.dist_matrix_I(i, i_) << std::endl;
 			res += std::exp(-std::pow(G.dist_matrix_I(i, i_), 2) / G.s_I)
 				* std::abs(G.dist_matrix_I(i, i_) - G.dist_matrix_J(m[i], m[i_]));
 		}
